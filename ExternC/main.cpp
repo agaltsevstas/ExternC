@@ -39,10 +39,16 @@ namespace c
     {
         return number > 0 ? number : -number;
     }
+
+    extern "C" int* Get_Pointer()
+    {
+        // В C нет new/delete, поэтому лучше использовать malloc/free
+        return (int*) malloc(10);
+    }
 }
 
 /*
- В C++ ЕСТЬ перегрузка функций, поэтому компоновщик видит имя функции + тип переменной
+ В C++ ЕСТЬ перегрузка функций, поэтому компоновщик видит имя функции + тип переменной. Благодаря искажении имен (name mangling) происходит перегрузка функций - это одно название для нескольких функций с разными типами аргументов. Компилятор формирует промежуточные объектные файлы (.o)/(.obj) (в зависимости от комплиятора), в которых указаны имена функций + типы аргументов, поэтому компоновщик видит аргумент функции. Нельзя начинать название функции с подчеркивания.
  */
 namespace cplusplus
 {
@@ -74,6 +80,9 @@ int main(int argc, const char * argv[])
         [[maybe_unused]] auto module4 = Module_double(-1.0);
         [[maybe_unused]] auto module5 = Module_float(1.0f);
         [[maybe_unused]] auto module6 = Module_float(-1.0f);
+        
+        [[maybe_unused]] auto pointer = Get_Pointer();
+        free(pointer);
     }
     // C++
     {
